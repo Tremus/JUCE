@@ -600,6 +600,7 @@ public:
     void setSelectedRows (const SparseSet<int>&, bool);
    #endif
 
+    void assignModelPtr (ListBoxModel*);
 private:
     //==============================================================================
     JUCE_PUBLIC_IN_DLL_BUILD (class ListViewport)
@@ -620,7 +621,6 @@ private:
     std::weak_ptr<ListBoxModel::Empty> weakModelPtr;
    #endif
 
-    void assignModelPtr (ListBoxModel*);
     void checkModelPtrIsValid() const;
     std::unique_ptr<AccessibilityHandler> createAccessibilityHandler() override;
     bool hasAccessibleHeaderComponent() const;
