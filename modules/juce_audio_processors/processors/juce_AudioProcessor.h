@@ -1019,8 +1019,8 @@ public:
     //==============================================================================
     /** Adds a parameter to the AudioProcessor.
 
-        The parameter object will be managed and deleted automatically by the
-        AudioProcessor when no longer needed.
+        The parameter object will NOT be deleted automatically.
+        Your are expected to handle your own memory like a big boy!
     */
     void addParameter (AudioProcessorParameter*);
 

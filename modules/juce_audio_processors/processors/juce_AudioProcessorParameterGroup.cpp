@@ -26,7 +26,10 @@
 namespace juce
 {
 
-AudioProcessorParameterGroup::AudioProcessorParameterNode::~AudioProcessorParameterNode() = default;
+AudioProcessorParameterGroup::AudioProcessorParameterNode::~AudioProcessorParameterNode()
+{
+    parameter.release();
+}
 
 AudioProcessorParameterGroup::AudioProcessorParameterNode::AudioProcessorParameterNode (AudioProcessorParameterNode&& other)
     : group (std::move (other.group)), parameter (std::move (other.parameter))

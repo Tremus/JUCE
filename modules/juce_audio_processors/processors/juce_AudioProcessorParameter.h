@@ -340,7 +340,6 @@ public:
     /** @internal */
     void sendValueChangedMessageToListeners (float newValue);
 
-private:
     //==============================================================================
     friend class AudioProcessor;
     friend class LegacyAudioParameter;
