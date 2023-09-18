@@ -37,7 +37,7 @@ cmake_minimum_required(VERSION 3.22)
 
 # ==================================================================================================
 
-set(JUCE_ALL_FILES
+set(files_juce_analytics
 juce_analytics/analytics/juce_Analytics.cpp
 juce_analytics/analytics/juce_Analytics.h
 juce_analytics/analytics/juce_ButtonTracker.cpp
@@ -47,6 +47,8 @@ juce_analytics/destinations/juce_ThreadedAnalyticsDestination.cpp
 juce_analytics/destinations/juce_ThreadedAnalyticsDestination.h
 juce_analytics/juce_analytics.cpp
 juce_analytics/juce_analytics.h
+)
+set(files_juce_audio_basics
 juce_audio_basics/audio_play_head/juce_AudioPlayHead.cpp
 juce_audio_basics/audio_play_head/juce_AudioPlayHead.h
 juce_audio_basics/buffers/juce_AudioChannelSet.cpp
@@ -149,6 +151,8 @@ juce_audio_basics/utilities/juce_Reverb.h
 juce_audio_basics/utilities/juce_SmoothedValue.cpp
 juce_audio_basics/utilities/juce_SmoothedValue.h
 juce_audio_basics/utilities/juce_WindowedSincInterpolator.cpp
+)
+set(files_juce_audio_devices
 juce_audio_devices/audio_io/juce_AudioDeviceManager.cpp
 juce_audio_devices/audio_io/juce_AudioDeviceManager.h
 juce_audio_devices/audio_io/juce_AudioIODevice.cpp
@@ -313,6 +317,8 @@ juce_audio_devices/sources/juce_AudioSourcePlayer.cpp
 juce_audio_devices/sources/juce_AudioSourcePlayer.h
 juce_audio_devices/sources/juce_AudioTransportSource.cpp
 juce_audio_devices/sources/juce_AudioTransportSource.h
+)
+set(files_juce_audio_formats
 juce_audio_formats/codecs/flac/Flac Licence.txt
 juce_audio_formats/codecs/flac/all.h
 juce_audio_formats/codecs/flac/alloc.h
@@ -477,6 +483,8 @@ juce_audio_formats/juce_audio_formats.h
 juce_audio_formats/juce_audio_formats.mm
 juce_audio_formats/sampler/juce_Sampler.cpp
 juce_audio_formats/sampler/juce_Sampler.h
+)
+set(files_juce_audio_plugin_client
 juce_audio_plugin_client/AAX/juce_AAX_Modifier_Injector.h
 juce_audio_plugin_client/AU/AudioUnitSDK/AUBase.cpp
 juce_audio_plugin_client/AU/AudioUnitSDK/AUBase.h
@@ -535,6 +543,8 @@ juce_audio_plugin_client/juce_audio_plugin_client_VST2.cpp
 juce_audio_plugin_client/juce_audio_plugin_client_VST2.mm
 juce_audio_plugin_client/juce_audio_plugin_client_VST3.cpp
 juce_audio_plugin_client/juce_audio_plugin_client_VST3.mm
+)
+set(files_juce_audio_processors
 juce_audio_processors/format/juce_AudioPluginFormat.cpp
 juce_audio_processors/format/juce_AudioPluginFormat.h
 juce_audio_processors/format/juce_AudioPluginFormatManager.cpp
@@ -945,6 +955,8 @@ juce_audio_processors/utilities/juce_RangedAudioParameter.h
 juce_audio_processors/utilities/juce_VST2ClientExtensions.cpp
 juce_audio_processors/utilities/juce_VST2ClientExtensions.h
 juce_audio_processors/utilities/juce_VST3ClientExtensions.h
+)
+set(files_juce_audio_utils
 juce_audio_utils/audio_cd/juce_AudioCDBurner.h
 juce_audio_utils/audio_cd/juce_AudioCDReader.cpp
 juce_audio_utils/audio_cd/juce_AudioCDReader.h
@@ -983,6 +995,8 @@ juce_audio_utils/players/juce_AudioProcessorPlayer.cpp
 juce_audio_utils/players/juce_AudioProcessorPlayer.h
 juce_audio_utils/players/juce_SoundPlayer.cpp
 juce_audio_utils/players/juce_SoundPlayer.h
+)
+set(files_juce_box2d
 juce_box2d/box2d/Box2D.h
 juce_box2d/box2d/Collision/Shapes/b2ChainShape.cpp
 juce_box2d/box2d/Collision/Shapes/b2ChainShape.h
@@ -1079,6 +1093,8 @@ juce_box2d/juce_box2d.cpp
 juce_box2d/juce_box2d.h
 juce_box2d/utils/juce_Box2DRenderer.cpp
 juce_box2d/utils/juce_Box2DRenderer.h
+)
+set(files_juce_core
 juce_core/containers/juce_AbstractFifo.cpp
 juce_core/containers/juce_AbstractFifo.h
 juce_core/containers/juce_Array.h
@@ -1355,6 +1371,8 @@ juce_core/zip/zlib/zconf.in.h
 juce_core/zip/zlib/zlib.h
 juce_core/zip/zlib/zutil.c
 juce_core/zip/zlib/zutil.h
+)
+set(files_juce_cryptography
 juce_cryptography/encryption/juce_BlowFish.cpp
 juce_cryptography/encryption/juce_BlowFish.h
 juce_cryptography/encryption/juce_Primes.cpp
@@ -1370,6 +1388,8 @@ juce_cryptography/hashing/juce_Whirlpool.h
 juce_cryptography/juce_cryptography.cpp
 juce_cryptography/juce_cryptography.h
 juce_cryptography/juce_cryptography.mm
+)
+set(files_juce_data_structures
 juce_data_structures/app_properties/juce_ApplicationProperties.cpp
 juce_data_structures/app_properties/juce_ApplicationProperties.h
 juce_data_structures/app_properties/juce_PropertiesFile.cpp
@@ -1391,6 +1411,8 @@ juce_data_structures/values/juce_ValueTreePropertyWithDefault.h
 juce_data_structures/values/juce_ValueTreePropertyWithDefault_test.cpp
 juce_data_structures/values/juce_ValueTreeSynchroniser.cpp
 juce_data_structures/values/juce_ValueTreeSynchroniser.h
+)
+set(files_juce_dsp
 juce_dsp/containers/juce_AudioBlock.h
 juce_dsp/containers/juce_AudioBlock_test.cpp
 juce_dsp/containers/juce_FixedSizeFunction.h
@@ -1475,6 +1497,8 @@ juce_dsp/widgets/juce_Phaser.cpp
 juce_dsp/widgets/juce_Phaser.h
 juce_dsp/widgets/juce_Reverb.h
 juce_dsp/widgets/juce_WaveShaper.h
+)
+set(files_juce_events
 juce_events/broadcasters/juce_ActionBroadcaster.cpp
 juce_events/broadcasters/juce_ActionBroadcaster.h
 juce_events/broadcasters/juce_ActionListener.h
@@ -1527,6 +1551,8 @@ juce_events/timers/juce_MultiTimer.cpp
 juce_events/timers/juce_MultiTimer.h
 juce_events/timers/juce_Timer.cpp
 juce_events/timers/juce_Timer.h
+)
+set(files_juce_graphics
 juce_graphics/colour/juce_Colour.cpp
 juce_graphics/colour/juce_Colour.h
 juce_graphics/colour/juce_ColourGradient.cpp
@@ -1697,7 +1723,8 @@ juce_graphics/native/juce_RenderingHelpers.h
 juce_graphics/placement/juce_Justification.h
 juce_graphics/placement/juce_RectanglePlacement.cpp
 juce_graphics/placement/juce_RectanglePlacement.h
-juce_gui_basics/.DS_Store
+)
+set(files_juce_gui_basics
 juce_gui_basics/accessibility/enums/juce_AccessibilityActions.h
 juce_gui_basics/accessibility/enums/juce_AccessibilityEvent.h
 juce_gui_basics/accessibility/enums/juce_AccessibilityRole.h
@@ -2078,6 +2105,8 @@ juce_gui_basics/windows/juce_TopLevelWindow.h
 juce_gui_basics/windows/juce_VBlankAttachment.cpp
 juce_gui_basics/windows/juce_VBlankAttachment.h
 juce_gui_basics/windows/juce_WindowUtils.h
+)
+set(files_juce_gui_extra
 juce_gui_extra/code_editor/juce_CPlusPlusCodeTokeniser.cpp
 juce_gui_extra/code_editor/juce_CPlusPlusCodeTokeniser.h
 juce_gui_extra/code_editor/juce_CPlusPlusCodeTokeniserFunctions.h
@@ -2146,6 +2175,8 @@ juce_gui_extra/native/juce_WebBrowserComponent_linux.cpp
 juce_gui_extra/native/juce_WebBrowserComponent_mac.mm
 juce_gui_extra/native/juce_WebBrowserComponent_windows.cpp
 juce_gui_extra/native/juce_XEmbedComponent_linux.cpp
+)
+set(files_juce_opengl
 juce_opengl/geometry/juce_Draggable3DOrientation.h
 juce_opengl/geometry/juce_Matrix3D.h
 juce_opengl/geometry/juce_Quaternion.h
@@ -2185,6 +2216,8 @@ juce_opengl/opengl/juce_khrplatform.h
 juce_opengl/opengl/juce_wgl.h
 juce_opengl/utils/juce_OpenGLAppComponent.cpp
 juce_opengl/utils/juce_OpenGLAppComponent.h
+)
+set(files_juce_osc
 juce_osc/juce_osc.cpp
 juce_osc/juce_osc.h
 juce_osc/osc/juce_OSCAddress.cpp
@@ -2203,6 +2236,8 @@ juce_osc/osc/juce_OSCTimeTag.cpp
 juce_osc/osc/juce_OSCTimeTag.h
 juce_osc/osc/juce_OSCTypes.cpp
 juce_osc/osc/juce_OSCTypes.h
+)
+set(files_juce_product_unlocking
 juce_product_unlocking/in_app_purchases/juce_InAppPurchases.cpp
 juce_product_unlocking/in_app_purchases/juce_InAppPurchases.h
 juce_product_unlocking/juce_product_unlocking.cpp
@@ -2218,6 +2253,8 @@ juce_product_unlocking/marketplace/juce_TracktionMarketplaceStatus.h
 juce_product_unlocking/native/java/app/com/rmsl/juce/JuceBillingClient.java
 juce_product_unlocking/native/juce_InAppPurchases_android.cpp
 juce_product_unlocking/native/juce_InAppPurchases_ios.cpp
+)
+set(files_juce_video
 juce_video/capture/juce_CameraDevice.cpp
 juce_video/capture/juce_CameraDevice.h
 juce_video/juce_video.cpp
@@ -2240,6 +2277,8 @@ juce_video/native/juce_Video_mac.h
 juce_video/native/juce_Video_windows.h
 juce_video/playback/juce_VideoComponent.cpp
 juce_video/playback/juce_VideoComponent.h
+)
+set(files_juce_build_tools
 juce_build_tools/juce_build_tools.cpp
 juce_build_tools/juce_build_tools.h
 juce_build_tools/utils/juce_BinaryResourceFile.cpp
@@ -2421,9 +2460,52 @@ function(_juce_module_sources module_path output_path built_sources other_source
     # foreach(fn ${all_module_files})
     #     message(STATUS ${fn})
     # endforeach()
-    set(all_module_files ${JUCE_ALL_FILES})
-    list(FILTER all_module_files INCLUDE REGEX "^${module_glob}[^/]*")
-
+    set(all_module_files)
+    if (${module_glob} STREQUAL "juce_analytics")
+        set(all_module_files ${files_juce_analytics})
+    elseif (${module_glob} STREQUAL "juce_audio_basics")
+        set(all_module_files ${files_juce_audio_basics})
+    elseif (${module_glob} STREQUAL "juce_audio_devices")
+        set(all_module_files ${files_juce_audio_devices})
+    elseif (${module_glob} STREQUAL "juce_audio_formats")
+        set(all_module_files ${files_juce_audio_formats})
+    elseif (${module_glob} STREQUAL "juce_audio_plugin_client")
+        set(all_module_files ${files_juce_audio_plugin_client})
+    elseif (${module_glob} STREQUAL "juce_audio_processors")
+        set(all_module_files ${files_juce_audio_processors})
+    elseif (${module_glob} STREQUAL "juce_audio_utils")
+        set(all_module_files ${files_juce_audio_utils})
+    elseif (${module_glob} STREQUAL "juce_box2d")
+        set(all_module_files ${files_juce_box2d})
+    elseif (${module_glob} STREQUAL "juce_core")
+        set(all_module_files ${files_juce_core})
+    elseif (${module_glob} STREQUAL "juce_cryptography")
+        set(all_module_files ${files_juce_cryptography})
+    elseif (${module_glob} STREQUAL "juce_data_structures")
+        set(all_module_files ${files_juce_data_structures})
+    elseif (${module_glob} STREQUAL "juce_dsp")
+        set(all_module_files ${files_juce_dsp})
+    elseif (${module_glob} STREQUAL "juce_events")
+        set(all_module_files ${files_juce_events})
+    elseif (${module_glob} STREQUAL "juce_graphics")
+        set(all_module_files ${files_juce_graphics})
+    elseif (${module_glob} STREQUAL "juce_gui_basics")
+        set(all_module_files ${files_juce_gui_basics})
+    elseif (${module_glob} STREQUAL "juce_gui_extra")
+        set(all_module_files ${files_juce_gui_extra})
+    elseif (${module_glob} STREQUAL "juce_opengl")
+        set(all_module_files ${files_juce_opengl})
+    elseif (${module_glob} STREQUAL "juce_osc")
+        set(all_module_files ${files_juce_osc})
+    elseif (${module_glob} STREQUAL "juce_product_unlocking")
+        set(all_module_files ${files_juce_product_unlocking})
+    elseif (${module_glob} STREQUAL "juce_video")
+        set(all_module_files ${files_juce_video})
+    elseif (${module_glob} STREQUAL "juce_build_tools")
+        set(all_module_files ${files_juce_build_tools})
+    else()
+        message(FATAL_ERROR "Module '${module_glob}' not found")
+    endif()
 
     set(base_path "${module_glob}/${module_glob}")
 
@@ -2694,8 +2776,7 @@ function(juce_add_module module_path)
         #     CONFIGURE_DEPENDS LIST_DIRECTORIES FALSE
         #     RELATIVE "${module_parent_path}"
         #     "${module_path}/*")
-        set(all_module_files ${JUCE_ALL_FILES})
-        list(FILTER all_module_files INCLUDE REGEX "^${module_glob}[^/]*")
+        set(all_module_files ${files_juce_audio_plugin_client})
     else()
         list(APPEND all_module_sources ${globbed_sources})
     endif()
