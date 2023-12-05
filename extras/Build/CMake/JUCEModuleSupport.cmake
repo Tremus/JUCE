@@ -77,8 +77,10 @@ juce_audio_basics/midi/juce_MidiMessageSequence.h
 juce_audio_basics/midi/juce_MidiRPN.cpp
 juce_audio_basics/midi/juce_MidiRPN.h
 juce_audio_basics/midi/ump/juce_UMP.h
+juce_audio_basics/midi/ump/juce_UMPBytesOnGroup.h
 juce_audio_basics/midi/ump/juce_UMPConversion.h
 juce_audio_basics/midi/ump/juce_UMPConverters.h
+juce_audio_basics/midi/ump/juce_UMPDeviceInfo.h
 juce_audio_basics/midi/ump/juce_UMPDispatcher.h
 juce_audio_basics/midi/ump/juce_UMPFactory.h
 juce_audio_basics/midi/ump/juce_UMPIterator.cpp
@@ -115,6 +117,7 @@ juce_audio_basics/mpe/juce_MPEValue.cpp
 juce_audio_basics/mpe/juce_MPEValue.h
 juce_audio_basics/mpe/juce_MPEZoneLayout.cpp
 juce_audio_basics/mpe/juce_MPEZoneLayout.h
+juce_audio_basics/native/juce_AudioWorkgroup_mac.h
 juce_audio_basics/native/juce_CoreAudioLayouts_mac.h
 juce_audio_basics/native/juce_CoreAudioTimeConversions_mac.h
 juce_audio_basics/sources/juce_AudioSource.h
@@ -140,6 +143,8 @@ juce_audio_basics/synthesisers/juce_Synthesiser.cpp
 juce_audio_basics/synthesisers/juce_Synthesiser.h
 juce_audio_basics/utilities/juce_ADSR.h
 juce_audio_basics/utilities/juce_ADSR_test.cpp
+juce_audio_basics/utilities/juce_AudioWorkgroup.cpp
+juce_audio_basics/utilities/juce_AudioWorkgroup.h
 juce_audio_basics/utilities/juce_Decibels.h
 juce_audio_basics/utilities/juce_GenericInterpolator.h
 juce_audio_basics/utilities/juce_IIRFilter.cpp
@@ -1104,6 +1109,8 @@ juce_core/containers/juce_ArrayBase.h
 juce_core/containers/juce_DynamicObject.cpp
 juce_core/containers/juce_DynamicObject.h
 juce_core/containers/juce_ElementComparator.h
+juce_core/containers/juce_Enumerate.h
+juce_core/containers/juce_Enumerate_test.cpp
 juce_core/containers/juce_HashMap.h
 juce_core/containers/juce_HashMap_test.cpp
 juce_core/containers/juce_LinkedListPointer.h
@@ -1153,6 +1160,10 @@ juce_core/javascript/juce_JSON.cpp
 juce_core/javascript/juce_JSON.h
 juce_core/javascript/juce_Javascript.cpp
 juce_core/javascript/juce_Javascript.h
+juce_core/javascript/juce_JSONSerialisation.h
+juce_core/javascript/juce_JSONSerialisation_test.cpp
+juce_core/javascript/juce_JSONUtils.cpp
+juce_core/javascript/juce_JSONUtils.h
 juce_core/juce_core.cpp
 juce_core/juce_core.h
 juce_core/juce_core.mm
@@ -1194,6 +1205,8 @@ juce_core/misc/juce_ConsoleApplication.h
 juce_core/misc/juce_EnumHelpers.h
 juce_core/misc/juce_EnumHelpers_test.cpp
 juce_core/misc/juce_Functional.h
+juce_core/misc/juce_ScopeGuard.cpp
+juce_core/misc/juce_ScopeGuard.h
 juce_core/misc/juce_Result.cpp
 juce_core/misc/juce_Result.h
 juce_core/misc/juce_RuntimePermissions.cpp
@@ -1227,9 +1240,11 @@ juce_core/native/juce_Network_linux.cpp
 juce_core/native/juce_Network_mac.mm
 juce_core/native/juce_Network_windows.cpp
 juce_core/native/juce_ObjCHelpers_mac.h
+juce_core/native/juce_ObjCHelpers_mac_test.mm
 juce_core/native/juce_PlatformTimerListener.h
 juce_core/native/juce_PlatformTimer_generic.cpp
 juce_core/native/juce_PlatformTimer_windows.cpp
+juce_core/native/juce_Process_mac.mm
 juce_core/native/juce_Registry_windows.cpp
 juce_core/native/juce_RuntimePermissions_android.cpp
 juce_core/native/juce_SharedCode_intel.h
@@ -1257,6 +1272,7 @@ juce_core/network/juce_URL.cpp
 juce_core/network/juce_URL.h
 juce_core/network/juce_WebInputStream.cpp
 juce_core/network/juce_WebInputStream.h
+juce_core/serialisation/juce_Serialisation.h
 juce_core/streams/juce_AndroidDocumentInputSource.h
 juce_core/streams/juce_BufferedInputStream.cpp
 juce_core/streams/juce_BufferedInputStream.h
@@ -2176,6 +2192,49 @@ juce_gui_extra/native/juce_WebBrowserComponent_mac.mm
 juce_gui_extra/native/juce_WebBrowserComponent_windows.cpp
 juce_gui_extra/native/juce_XEmbedComponent_linux.cpp
 )
+set(files_juce_midi_ci
+juce_midi_ci/ci/juce_CIChannelAddress.h
+juce_midi_ci/ci/juce_CIDevice.cpp
+juce_midi_ci/ci/juce_CIDevice.h
+juce_midi_ci/ci/juce_CIDeviceFeatures.h
+juce_midi_ci/ci/juce_CIDeviceListener.h
+juce_midi_ci/ci/juce_CIDeviceMessageHandler.h
+juce_midi_ci/ci/juce_CIDeviceOptions.h
+juce_midi_ci/ci/juce_CIEncoding.h
+juce_midi_ci/ci/juce_CIEncodings.cpp
+juce_midi_ci/ci/juce_CIEncodings.h
+juce_midi_ci/ci/juce_CIFunctionBlock.h
+juce_midi_ci/ci/juce_CIMessages.h
+juce_midi_ci/ci/juce_CIMuid.h
+juce_midi_ci/ci/juce_CIParser.cpp
+juce_midi_ci/ci/juce_CIParser.h
+juce_midi_ci/ci/juce_CIProfileAtAddress.h
+juce_midi_ci/ci/juce_CIProfileDelegate.h
+juce_midi_ci/ci/juce_CIProfileHost.cpp
+juce_midi_ci/ci/juce_CIProfileHost.h
+juce_midi_ci/ci/juce_CIProfileStates.cpp
+juce_midi_ci/ci/juce_CIProfileStates.h
+juce_midi_ci/ci/juce_CIPropertyDelegate.cpp
+juce_midi_ci/ci/juce_CIPropertyDelegate.h
+juce_midi_ci/ci/juce_CIPropertyExchangeCache.cpp
+juce_midi_ci/ci/juce_CIPropertyExchangeCache.h
+juce_midi_ci/ci/juce_CIPropertyExchangeResult.h
+juce_midi_ci/ci/juce_CIPropertyHost.cpp
+juce_midi_ci/ci/juce_CIPropertyHost.h
+juce_midi_ci/ci/juce_CIResponderDelegate.h
+juce_midi_ci/ci/juce_CIResponderOutput.cpp
+juce_midi_ci/ci/juce_CIResponderOutput.h
+juce_midi_ci/ci/juce_CISubscription.h
+juce_midi_ci/ci/juce_CISupportedAndActive.h
+juce_midi_ci/detail/juce_CIMarshalling.h
+juce_midi_ci/detail/juce_CIMessageMeta.h
+juce_midi_ci/detail/juce_CIMessageTypeUtils.h
+juce_midi_ci/detail/juce_CIPropertyDataMessageChunker.cpp
+juce_midi_ci/detail/juce_CIPropertyDataMessageChunker.h
+juce_midi_ci/detail/juce_CIPropertyHostUtils.h
+juce_midi_ci/detail/juce_CIResponder.cpp
+juce_midi_ci/detail/juce_CIResponder.h
+)
 set(files_juce_opengl
 juce_opengl/geometry/juce_Draggable3DOrientation.h
 juce_opengl/geometry/juce_Matrix3D.h
@@ -2493,6 +2552,8 @@ function(_juce_module_sources module_path output_path built_sources other_source
         set(all_module_files ${files_juce_gui_basics})
     elseif (${module_glob} STREQUAL "juce_gui_extra")
         set(all_module_files ${files_juce_gui_extra})
+    elseif (${module_glob} STREQUAL "juce_midi_ci")
+        set(all_module_files ${files_juce_midi_ci})
     elseif (${module_glob} STREQUAL "juce_opengl")
         set(all_module_files ${files_juce_opengl})
     elseif (${module_glob} STREQUAL "juce_osc")
