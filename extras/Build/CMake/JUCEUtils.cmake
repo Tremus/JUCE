@@ -352,6 +352,7 @@ function(_juce_write_configure_time_info target)
     _juce_append_target_property(file_content APP_SANDBOX_FILE_ACCESS_HOME_RW      ${target} JUCE_APP_SANDBOX_FILE_ACCESS_HOME_RW)
     _juce_append_target_property(file_content APP_SANDBOX_FILE_ACCESS_ABS_RO       ${target} JUCE_APP_SANDBOX_FILE_ACCESS_ABS_RO)
     _juce_append_target_property(file_content APP_SANDBOX_FILE_ACCESS_ABS_RW       ${target} JUCE_APP_SANDBOX_FILE_ACCESS_ABS_RW)
+    _juce_append_target_property(file_content APP_SANDBOX_EXCEPTION_IOKIT          ${target} JUCE_APP_SANDBOX_EXCEPTION_IOKIT)
     _juce_append_target_property(file_content APP_GROUPS_ENABLED                   ${target} JUCE_APP_GROUPS_ENABLED)
     _juce_append_target_property(file_content APP_GROUP_IDS                        ${target} JUCE_APP_GROUP_IDS)
     _juce_append_target_property(file_content IS_PLUGIN                            ${target} JUCE_IS_PLUGIN)
@@ -427,7 +428,7 @@ function(juce_add_binary_data target)
     set(newline_delimited_input)
 
     foreach(name IN LISTS JUCE_ARG_SOURCES)
-        _juce_make_absolute_and_check(name)
+        _juce_make_absolute(name)
         set(newline_delimited_input "${newline_delimited_input}${name}\n")
     endforeach()
 
@@ -754,24 +755,38 @@ function(_juce_add_resources_rc source_target dest_target)
         return()
     endif()
 
-    get_target_property(juce_library_code ${source_target} JUCE_GENERATED_SOURCES_DIRECTORY)
-    get_target_property(input_info_file ${source_target} JUCE_INFO_FILE)
+    if(NOT TARGET ${source_target}_rc_lib)
+        get_target_property(juce_library_code ${source_target} JUCE_GENERATED_SOURCES_DIRECTORY)
+        get_target_property(input_info_file ${source_target} JUCE_INFO_FILE)
 
-    get_target_property(generated_icon ${source_target} JUCE_ICON_FILE)
-    set(dependency)
+        get_target_property(generated_icon ${source_target} JUCE_ICON_FILE)
+        set(dependency)
 
-    if(generated_icon)
-        set(dependency DEPENDS "${generated_icon}")
+        if(generated_icon)
+            set(dependency DEPENDS "${generated_icon}")
+        endif()
+
+        set(resource_rc_file "${juce_library_code}/${source_target}_resources.rc")
+
+        add_custom_command(OUTPUT "${resource_rc_file}"
+            COMMAND juce::juceaide rcfile "${input_info_file}" "${resource_rc_file}"
+            ${dependency}
+            VERBATIM)
+
+        add_library(${source_target}_rc_lib OBJECT ${resource_rc_file})
+
+        set(compile_defs $<TARGET_GENEX_EVAL:${source_target},$<TARGET_PROPERTY:${source_target},COMPILE_DEFINITIONS>>)
+        set(include_dirs $<TARGET_GENEX_EVAL:${source_target},$<TARGET_PROPERTY:${source_target},INCLUDE_DIRECTORIES>>)
+        set(filtered $<FILTER:${compile_defs},INCLUDE,JUCE_USER_DEFINED_RC_FILE=>)
+        set(has_custom_rc_include $<BOOL:${filtered}>)
+
+        target_include_directories(${source_target}_rc_lib
+            PRIVATE $<${has_custom_rc_include}:${include_dirs}>)
+        set_source_files_properties(${resource_rc_file} PROPERTIES
+            COMPILE_DEFINITIONS $<${has_custom_rc_include}:${compile_defs}>)
     endif()
 
-    set(resource_rc_file "${juce_library_code}/${dest_target}_resources.rc")
-
-    add_custom_command(OUTPUT "${resource_rc_file}"
-        COMMAND juce::juceaide rcfile "${input_info_file}" "${resource_rc_file}"
-        ${dependency}
-        VERBATIM)
-
-    target_sources(${dest_target} PRIVATE "${resource_rc_file}")
+    target_link_libraries(${dest_target} PRIVATE ${source_target}_rc_lib)
 endfunction()
 
 function(_juce_configure_app_bundle source_target dest_target)
@@ -880,6 +895,26 @@ function(_juce_set_copy_properties shared_code target from to_property)
     set_target_properties("${target}" PROPERTIES JUCE_PLUGIN_ARTEFACT_FILE "${from}")
 endfunction()
 
+function(_juce_adhoc_sign target)
+    if(NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        return()
+    endif()
+
+    get_target_property(bundle "${target}" BUNDLE)
+
+    set(src "$<TARGET_FILE:${target}>")
+
+    if(bundle)
+        set(src "$<TARGET_BUNDLE_DIR:${target}>")
+    endif()
+
+    add_custom_command(TARGET ${target} POST_BUILD
+        COMMAND "${CMAKE_COMMAND}"
+            "-Dsrc=${src}"
+            "-P" "${JUCE_CMAKE_UTILS_DIR}/checkBundleSigning.cmake"
+        VERBATIM)
+endfunction()
+
 function(juce_enable_copy_plugin_step shared_code_target)
     get_target_property(step_added ${shared_code_target} _JUCE_PLUGIN_COPY_STEP_ADDED)
 
@@ -899,24 +934,20 @@ function(juce_enable_copy_plugin_step shared_code_target)
             continue()
         endif()
 
+        _juce_adhoc_sign("${target}")
+
         get_target_property(source "${target}" JUCE_PLUGIN_ARTEFACT_FILE)
 
-        if(source)
-            if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-                add_custom_command(TARGET ${target} POST_BUILD
-                    COMMAND "${CMAKE_COMMAND}"
-                        "-Dsrc=${source}"
-                        "-P" "${JUCE_CMAKE_UTILS_DIR}/checkBundleSigning.cmake"
-                    VERBATIM)
-            endif()
+        if(NOT source)
+            continue()
+        endif()
 
-            get_target_property(dest "${target}" JUCE_PLUGIN_COPY_DIR)
+        get_target_property(dest "${target}" JUCE_PLUGIN_COPY_DIR)
 
-            if(dest)
-                _juce_copy_dir("${target}" "${source}" "$<GENEX_EVAL:${dest}>")
-            else()
-                message(WARNING "Target '${target}' requested copy but no destination is set")
-            endif()
+        if(dest)
+            _juce_copy_dir("${target}" "${source}" "$<GENEX_EVAL:${dest}>")
+        else()
+            message(WARNING "Target '${target}' requested copy but no destination is set")
         endif()
     endforeach()
 endfunction()
@@ -983,6 +1014,10 @@ function(_juce_add_vst3_manifest_helper_target)
     set(THREADS_PREFER_PTHREAD_FLAG ON)
     find_package(Threads REQUIRED)
     target_link_libraries(juce_vst3_helper PRIVATE Threads::Threads ${CMAKE_DL_LIBS} juce_recommended_config_flags)
+
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
+        target_link_libraries(juce_vst3_helper PRIVATE stdc++fs)
+    endif()
 endfunction()
 
 function(juce_enable_vst3_manifest_step shared_code_target)
@@ -998,7 +1033,7 @@ function(juce_enable_vst3_manifest_step shared_code_target)
     get_target_property(copy_step_added ${shared_code_target} _JUCE_PLUGIN_COPY_STEP_ADDED)
 
     if(copy_step_added)
-        message(FATAL "VST3 manifest generation would run after plugin copy step, so it has been disabled. "
+        message(FATAL_ERROR "VST3 manifest generation would run after plugin copy step, so it has been disabled. "
             "If you're manually calling juce_enable_vst3_manifest_step, then you probably need to call "
             "juce_enable_copy_plugin_step too.")
     endif()
@@ -1012,7 +1047,7 @@ function(juce_enable_vst3_manifest_step shared_code_target)
     get_target_property(product ${target_name} JUCE_PLUGIN_ARTEFACT_FILE)
 
     if(NOT product)
-        message(FATAL "Property JUCE_PLUGIN_ARTEFACT_FILE not set for ${target_name}")
+        message(FATAL_ERROR "Property JUCE_PLUGIN_ARTEFACT_FILE not set for ${target_name}")
     endif()
 
     # Add a target for the helper tool
@@ -1076,6 +1111,8 @@ function(_juce_set_plugin_target_properties shared_code_target kind)
         endif()
 
         _juce_set_copy_properties(${shared_code_target} ${target_name} "${output_path}" JUCE_VST3_COPY_DIR)
+
+        _juce_adhoc_sign(${target_name})
 
         get_target_property(vst3_auto_manifest ${shared_code_target} JUCE_VST3_AUTO_MANIFEST)
 
@@ -1166,9 +1203,9 @@ function(_juce_set_plugin_target_properties shared_code_target kind)
 
         get_target_property(JUCE_LV2URI "${shared_code_target}" JUCE_LV2URI)
 
-        if(NOT JUCE_LV2URI MATCHES "https?://.*")
+        if(NOT JUCE_LV2URI MATCHES "https?://.*|urn:.*")
             message(WARNING
-                "LV2URI should be well-formed with an 'http' prefix. "
+                "LV2URI should be well-formed with an 'http' or 'urn' prefix. "
                 "Check the LV2URI argument to juce_add_plugin.")
         endif()
 
@@ -1178,6 +1215,8 @@ function(_juce_set_plugin_target_properties shared_code_target kind)
 
         set(output_path "${products_folder}/${product_name}.lv2")
         set_target_properties(${target_name} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${output_path}")
+
+        _juce_adhoc_sign(${target_name})
 
         _juce_add_lv2_manifest_helper_target()
 
@@ -1854,6 +1893,7 @@ function(_juce_initialise_target target)
         APP_SANDBOX_FILE_ACCESS_HOME_RW
         APP_SANDBOX_FILE_ACCESS_ABS_RO
         APP_SANDBOX_FILE_ACCESS_ABS_RW
+        APP_SANDBOX_EXCEPTION_IOKIT
         DOCUMENT_EXTENSIONS
         AAX_CATEGORY
         IPHONE_SCREEN_ORIENTATIONS      # iOS only
@@ -2190,6 +2230,10 @@ function(juce_add_pip header)
                     juce_add_bundle_resources_directory("${target_name}" "${JUCE_SOURCE_DIR}/examples/Assets")
                 endif()
             endforeach()
+        endif()
+
+        if((CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") OR (CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC"))
+            target_compile_options(${JUCE_PIP_NAME} PRIVATE /bigobj)
         endif()
     endif()
 endfunction()

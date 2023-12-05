@@ -187,7 +187,7 @@ const AudioProcessorParameterGroup* AudioProcessorParameterGroup::getGroupForPar
 //==============================================================================
 #if JUCE_UNIT_TESTS
 
-class ParameterGroupTests   : public UnitTest
+class ParameterGroupTests final : public UnitTest
 {
 public:
     ParameterGroupTests()
@@ -295,7 +295,7 @@ public:
 
     }
 private:
-    struct TestAudioProcessor   : public AudioProcessor
+    struct TestAudioProcessor final : public AudioProcessor
     {
         const String getName() const override { return "ap"; }
         void prepareToPlay (double, int) override {}
