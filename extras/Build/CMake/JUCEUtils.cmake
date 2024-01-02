@@ -1319,7 +1319,7 @@ function(_juce_link_plugin_wrapper shared_code_target kind)
     endif()
 
     _juce_set_plugin_target_properties(${shared_code_target} ${kind})
-    _juce_add_resources_rc(${shared_code_target} ${target_name})
+    # _juce_add_resources_rc(${shared_code_target} ${target_name})
 endfunction()
 
 # ==================================================================================================
@@ -1992,7 +1992,7 @@ function(juce_add_console_app target)
 
     if(NOT JUCE_ARG__NO_RESOURCERC)
         _juce_write_configure_time_info(${target})
-        _juce_add_resources_rc(${target} ${target})
+        # _juce_add_resources_rc(${target} ${target})
     endif()
 endfunction()
 
@@ -2009,7 +2009,7 @@ function(juce_add_gui_app target)
     set_target_properties(${target} PROPERTIES JUCE_TARGET_KIND_STRING "App")
     _juce_configure_bundle(${target} ${target})
     _juce_configure_app_bundle(${target} ${target})
-    _juce_add_resources_rc(${target} ${target})
+    # _juce_add_resources_rc(${target} ${target})
 endfunction()
 
 function(juce_add_plugin target)
