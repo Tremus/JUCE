@@ -87,7 +87,7 @@
 
  #define _WINSOCK_DEPRECATED_NO_WARNINGS 1
  #define STRICT 1
- #define WIN32_LEAN_AND_MEAN 1
+ #define WIN32_LEAN_AND_MEAN
  #if JUCE_MINGW
   #if ! defined (_WIN32_WINNT)
    #define _WIN32_WINNT 0x0600
